@@ -64,6 +64,18 @@ class ClassSpec extends FunSpec with Matchers {
 
     }
 
+    it("body code execute before constructor"){
+      class C1(var state:Int){
+        println("I'm in class body")
+        def this(){
+          this(0)
+          println("I'm in constructor")
+        }
+      }
+
+      new C1()
+    }
+
     it("can implement abstract factory pattern"){
       abstract class Person{
         def sayHi()
