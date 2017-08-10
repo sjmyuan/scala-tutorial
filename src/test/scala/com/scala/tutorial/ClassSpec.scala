@@ -94,5 +94,61 @@ class ClassSpec extends FunSpec with Matchers {
       Person(1).sayHi()
       Person(2).sayHi()
     }
+    it("can implement singleton in traditional way"){
+      class Counter private (var state:Int) {
+        def count ={
+          state+=1
+          println(s"Current count is ${state}")
+        }
+      }
+
+      object Counter{
+        private var counter:Counter = null
+        def apply()={
+          if(counter==null){
+            counter=new Counter(0)
+          }
+          counter
+        }
+      }
+
+      Counter().count
+      Counter().count
+      Counter().count
+    }
+
+    it("can implement singleton only by object"){
+      object Counter{
+        private var state = 0
+        def count ={
+          state+=1
+          println(s"Current count is ${state}")
+        }
+      }
+
+      Counter.count
+      Counter.count
+      Counter.count
+    }
+
+    describe("Using Self-Type Annotations"){
+      it("can invoke parent class method in nested class"){
+        class C1{ self =>
+          def talk(msg:String) = println(s"C1.talk: ${msg}")
+
+          class C2 {
+            class C3 {
+              def talk(msg:String) = self.talk(s"C3.talk: ${msg}")
+            }
+            val c3 = new C3
+          }
+
+          val c2=new C2
+        }
+
+        println(new C1().talk("Hello"))
+        println(new C1().c2.c3.talk("Hello"))
+      }
+    }
   }
 }
