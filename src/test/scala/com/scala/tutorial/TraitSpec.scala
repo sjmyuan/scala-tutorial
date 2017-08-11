@@ -25,13 +25,13 @@ class TraitSpec extends FunSpec with Matchers {
 
     it("override left trait or class defination"){
       trait T1{
-        def sayHi = println("I'm in T1")
+        def sayHi
       }
       trait T2{
         def sayHi = println("I'm in T2")
       }
 
-      class C1 extends T1 with T2{
+      class C1 extends T2 with T1{
         override def sayHi = super.sayHi
       }
 
@@ -39,6 +39,31 @@ class TraitSpec extends FunSpec with Matchers {
     }
 
     it("can implment cake pattern"){
+
+      trait Login{
+        def login()={
+          println("I'm login")
+        }
+      }
+
+      trait Logout{
+        def logout()={
+          println("I'm logout")
+        }
+      }
+
+      trait App { self:Login with Logout=>
+        def session()={
+          login()
+          logout()
+        }
+      }
+
+      class App1 extends App with Login with Logout{
+
+      }
+
+      new App1().session()
 
     }
 

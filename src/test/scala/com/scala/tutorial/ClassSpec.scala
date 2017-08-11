@@ -10,8 +10,11 @@ class ClassSpec extends FunSpec with Matchers {
     it("can define multiple constructor") {
       class Person(val firstName: String, val lastName: String, val age: Int) {
 
-        def this(firstName: String) {
-          this(firstName, "", 0);
+        private var address =""
+
+        def this(firstName: String,lastname:String,age:Int,address:String) {
+          this(firstName, "", age);
+          this.address=address
           println("\nNo last name or age given.")
         }
 
@@ -27,7 +30,7 @@ class ClassSpec extends FunSpec with Matchers {
       }
 
       println(new Person("Shang","Jiaming",20))
-      println(new Person("Shang"))
+//      println(new Person("Shang"))
       println(new Person("Shang","Jiaming"))
     }
 
