@@ -29,9 +29,8 @@ class ClassSpec extends FunSpec with Matchers {
 
       }
 
-      println(new Person("Shang","Jiaming",20))
-//      println(new Person("Shang"))
-      println(new Person("Shang","Jiaming"))
+      println(new Person("First","Second",20))
+      println(new Person("First","Second"))
     }
 
     it("can define static functions") {
@@ -163,6 +162,36 @@ class ClassSpec extends FunSpec with Matchers {
 
         println(new C1().talk("Hello"))
         println(new C1().c2.c3.talk("Hello"))
+      }
+    }
+
+    describe("Case Class"){
+      case class Person(name:String,age:Int)
+      it("can initialize by class name"){
+        val person = Person("Joe",20)
+        person.name should be("Joe")
+        person.age should be(20)
+      }
+
+      it("can be cloned by copy method"){
+        val firstPerson = Person("Joe",12)
+        val secondPerson = firstPerson.copy(age=20)
+        firstPerson.eq(secondPerson) should be(false)
+        secondPerson.age should be(20)
+      }
+
+      it("can extract property into variable"){
+        val person=Person("Joe",20)
+        val Person(name,age) = person
+        name should be("Joe")
+        age should be(20)
+      }
+
+      it("perfom comparison by object conent"){
+        val person1=Person("Joe",20)
+        val person2=Person("Joe",20)
+
+        person1 should be(person2)
       }
     }
   }
