@@ -34,7 +34,21 @@ class PatternMatchSpec extends FunSpec with Matchers {
 
       }
       it("can match custom class") {
+        class Person(val name:String,val age:Int)
+        object Person{
+          def unapply(arg: Person): Option[(String, Int)] ={
+            Some((arg.name,arg.age))
+          }
+        }
 
+        val person = new Person("Joe",20)
+
+        val name = person match {
+          case Person(name,_) => name
+          case _ => null
+        }
+
+        name should be("Joe")
       }
     }
     describe("Match Operation") {
