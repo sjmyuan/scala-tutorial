@@ -10,25 +10,63 @@ class PatternMatchSpec extends FunSpec with Matchers {
   describe("Pattern Match") {
     describe("Match Type") {
       it("can match literal value") {
+        val result = 3 match{
+          case 1 => 1
+          case 2|3 => 2
+          case _ => 3
+        }
 
+        result should be(2)
       }
       it("can match variable") {
+        val expected =2
+        val result = 2 match {
+          case `expected` => true
+          case _ => false
+        }
 
+        result should be(true)
       }
       it("can match variable argument lists") {
 
       }
       it("can not match type parameter") {
+        val result = List(1,2) match {
+          case _:List[String] => "String"
+          case _:List[Int] => "Int"
+          case _ => "Other"
+        }
 
+        result should be("String")
       }
       it("can match case class") {
-
+        case class Person(name:String,age:Int)
+        val person=Person("Joe",12)
+        val age = person match {
+          case Person("Joe",x)=>x
+          case _ => null
+        }
+        age should be(12)
       }
       it("can match nested type") {
+        case class Address(info:String)
+        case class Person(name:String,age:Int,addr:Address)
+        val person=Person("Joe",12,Address("RichMond"))
+        val info = person match {
+          case Person("Joe",12,Address(x))=>x
+          case _ => null
+        }
 
+        info should be("RichMond")
       }
-      it("can match sequence") {
 
+      it("can match sequence") {
+        val result = List(1,2,3) match {
+          case head +: tail => head
+          case _ => null
+        }
+
+        result should be(1)
       }
       it("can match regex") {
 
