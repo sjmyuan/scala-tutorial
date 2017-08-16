@@ -3,9 +3,13 @@ package com.scala.tutorial.option
 /**
   * Created by jiaming.shang on 8/16/17.
   */
-trait Option[A]
+trait Option[+A]
 case class Some[A](d:A) extends Option[A]
-case class None[A]() extends Option[A]
+object None extends Option[Nothing]{
+  def map[B](f:Any=>B):Option[B]={
+    None
+  }
+}
 
 class OptionOp[A](d:Option[A]){
   def map[B](f:A=>B):Option[B]={
@@ -17,7 +21,7 @@ object Option{
   def map[A,B](o:Option[A])(f:A=>B):Option[B]={
     o match {
       case Some(x) => Some(f(x))
-      case None() => None[B]()
+      case None => None
     }
   }
   implicit def toOp[A](o:Option[A]):OptionOp[A] = new OptionOp[A](o)

@@ -16,9 +16,9 @@ class OptionSpec extends FunSpec with Matchers{
       }
 
       it("should ignore None"){
-        val none = None[String]()
-        val result = none.map(x=>x.length)
-        result should be(None())
+        val none = None
+        val result = none.map(x=>"hello world")
+        result should be(None)
       }
     }
   }
