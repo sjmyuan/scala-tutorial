@@ -10,16 +10,16 @@ class PatternMatchSpec extends FunSpec with Matchers {
   describe("Pattern Match") {
     describe("Match Type") {
       it("can match literal value") {
-        val result = 3 match{
+        val result = 3 match {
           case 1 => 1
-          case 2|3 => 2
+          case 2 | 3 => 2
           case _ => 3
         }
 
         result should be(2)
       }
       it("can match variable") {
-        val expected =2
+        val expected = 2
         val result = 2 match {
           case `expected` => true
           case _ => false
@@ -28,32 +28,39 @@ class PatternMatchSpec extends FunSpec with Matchers {
         result should be(true)
       }
       it("can match variable argument lists") {
+        case class PersonList(names: String*)
 
+        val names = PersonList("Tom", "Jim", "Sow") match {
+          case PersonList(x@_*) => x
+          case _ => ""
+        }
+
+        names should be(Array("Tom", "Jim", "Sow"))
       }
       it("can not match type parameter") {
-        val result = List(1,2) match {
-          case _:List[String] => "String"
-          case _:List[Int] => "Int"
+        val result = List(1, 2) match {
+          case _: List[String] => "String"
+          case _: List[Int] => "Int"
           case _ => "Other"
         }
 
         result should be("String")
       }
       it("can match case class") {
-        case class Person(name:String,age:Int)
-        val person=Person("Joe",12)
+        case class Person(name: String, age: Int)
+        val person = Person("Joe", 12)
         val age = person match {
-          case Person("Joe",x)=>x
+          case Person("Joe", x) => x
           case _ => null
         }
         age should be(12)
       }
       it("can match nested type") {
-        case class Address(info:String)
-        case class Person(name:String,age:Int,addr:Address)
-        val person=Person("Joe",12,Address("RichMond"))
+        case class Address(info: String)
+        case class Person(name: String, age: Int, addr: Address)
+        val person = Person("Joe", 12, Address("RichMond"))
         val info = person match {
-          case Person("Joe",12,Address(x))=>x
+          case Person("Joe", 12, Address(x)) => x
           case _ => null
         }
 
@@ -61,7 +68,7 @@ class PatternMatchSpec extends FunSpec with Matchers {
       }
 
       it("can match sequence") {
-        val result = List(1,2,3) match {
+        val result = List(1, 2, 3) match {
           case head +: tail => head
           case _ => null
         }
@@ -69,20 +76,26 @@ class PatternMatchSpec extends FunSpec with Matchers {
         result should be(1)
       }
       it("can match regex") {
+        val nameRegex = "name=(.*)".r
+        val name = "name=Joe" match {
+          case nameRegex(x) => x
+          case _ => ""
+        }
 
+        name should be("Joe")
       }
       it("can match custom class") {
-        class Person(val name:String,val age:Int)
-        object Person{
-          def unapply(arg: Person): Option[(String, Int)] ={
-            Some((arg.name,arg.age))
+        class Person(val name: String, val age: Int)
+        object Person {
+          def unapply(arg: Person): Option[(String, Int)] = {
+            Some((arg.name, arg.age))
           }
         }
 
-        val person = new Person("Joe",20)
+        val person = new Person("Joe", 20)
 
         val name = person match {
-          case Person(name,_) => name
+          case Person(name, _) => name
           case _ => null
         }
 
