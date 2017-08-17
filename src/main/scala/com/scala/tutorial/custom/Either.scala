@@ -20,6 +20,13 @@ class LeftProjection[A, B](either: Either[A, B]) {
       case Right(y) => Right(y)
     }
   }
+
+  def toOption():Option[A] ={
+    either match {
+      case Left(x) => Some(x)
+      case Right(_) => None
+    }
+  }
 }
 
 class RightProjection[A, B](either: Either[A, B]) {
@@ -31,6 +38,13 @@ class RightProjection[A, B](either: Either[A, B]) {
     either match {
       case Left(x) => Left(x)
       case Right(y) => f(y)
+    }
+  }
+
+  def toOption():Option[B] ={
+    either match {
+      case Left(_) => None
+      case Right(y) => Some(y)
     }
   }
 }
