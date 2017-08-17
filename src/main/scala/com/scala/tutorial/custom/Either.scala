@@ -11,10 +11,7 @@ final case class Right[A, B](right: B) extends Either[A, B]
 
 class LeftProjection[A, B](either: Either[A, B]) {
   def map[C](f: A => C): Either[C, B] = {
-    either match {
-      case Left(x) => Left(f(x))
-      case Right(y) => Right(y)
-    }
+    Either.fold(either)(f)((x:B)=>x)
   }
 
   def flatMap[C](f: A => Either[C, B]): Either[C, B] = {
@@ -27,10 +24,7 @@ class LeftProjection[A, B](either: Either[A, B]) {
 
 class RightProjection[A, B](either: Either[A, B]) {
   def map[D](f: B => D): Either[A, D] = {
-    either match {
-      case Left(x) => Left(x)
-      case Right(y) => Right(f(y))
-    }
+    Either.fold(either)((x:A)=>x)(f)
   }
 
   def flatMap[D](f: B => Either[A, D]): Either[A, D] = {
