@@ -1,4 +1,4 @@
-package com.scala.tutorial.option
+package com.scala.tutorial.custom
 
 /**
   * Created by jiaming.shang on 8/16/17.
