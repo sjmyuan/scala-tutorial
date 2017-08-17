@@ -5,11 +5,7 @@ package com.scala.tutorial.option
   */
 trait Option[+A]
 case class Some[A](d:A) extends Option[A]
-object None extends Option[Nothing]{
-  def map[B](f:Any=>B):Option[B]={
-    None
-  }
-}
+case object None extends Option[Nothing]
 
 class OptionOp[A](d:Option[A]){
   def map[B](f:A=>B):Option[B]={
