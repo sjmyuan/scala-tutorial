@@ -3,7 +3,7 @@ package com.scala.tutorial.custom
 /**
   * Created by jiaming.shang on 8/17/17.
   */
-sealed trait Either[A, B]
+sealed trait Either[+A, +B]
 
 final case class Left[A, B](a: A) extends Either[A, B]
 

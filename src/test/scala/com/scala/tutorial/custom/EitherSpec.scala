@@ -35,6 +35,7 @@ class EitherSpec extends FunSpec with Matchers {
 
         describe("flatmap"){
           it("should return the transfered value"){
+            Left("test").left.flatMap(x=>Right(4)) should be(Right(4))
           }
         }
       }
@@ -43,6 +44,72 @@ class EitherSpec extends FunSpec with Matchers {
         describe("toOption"){
           it("should return None"){
             Left("test").right.toOption should be(None)
+          }
+        }
+
+        describe("map"){
+          it("should return the original value"){
+            Left("test").right.map((x:Int)=>1) should be(Left("test"))
+          }
+        }
+
+        describe("flatmap"){
+          it("should return the original value"){
+            Left("test").right.flatMap((x:Int)=>Right(4)) should be(Left("test"))
+          }
+        }
+      }
+    }
+
+    describe("Right"){
+      describe("isLeft"){
+        it("should return false"){
+          Right("test").isLeft should be(false)
+        }
+      }
+
+      describe("isRight"){
+        it("should return false"){
+          Right("test").isRight should be(true)
+        }
+      }
+
+      describe("left"){
+        describe("toOption"){
+          it("should return None"){
+            Right("test").left.toOption should be(None)
+          }
+        }
+
+        describe("map"){
+          it("should return the original value"){
+            Right("test").left.map((x:String)=>x.length) should be(Right("test"))
+          }
+        }
+
+        describe("flatmap"){
+          it("should return the original value"){
+            Right("test").left.flatMap((x:String)=>Left(4)) should be(Right("test"))
+          }
+        }
+      }
+
+      describe("right"){
+        describe("toOption"){
+          it("should return Some"){
+            Right("test").right.toOption should be(Some("test"))
+          }
+        }
+
+        describe("map"){
+          it("should return the transfered value"){
+            Right("test").right.map(x=>x.length) should be(Right(4))
+          }
+        }
+
+        describe("flatmap"){
+          it("should return the transfered value"){
+            Right("test").right.flatMap(x=>Left(1)) should be(Left(1))
           }
         }
       }
