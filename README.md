@@ -12,16 +12,16 @@ Learn scala by code
 + Pattern Match
 + Implicit-TODO
 + Function-TODO
-  + Argument
+  + Argument-TODO
     + Curry-TODO
-    + Default Value
-    + Variable argument list
+    + Default Value-TODO
+    + Variable argument list-TODO
   + Partial Applied Function-TODO
   + Partial Function-TOD
 + Type Parameter-TODO
   + Context Bound-TODO
-  + Variance vs Invariance
-+ Future
+  + Variance vs Invariance-TODO
++ Future-TODO
 
 ### FP
 + Option
