@@ -56,3 +56,9 @@ case object END extends MList[Nothing]
 
 case class CHAIN[+A](head: A, tail: MList[A]) extends MList[A]
 
+object MList{
+  def apply[A](values:A*): MList[A] ={
+    values.foldRight[MList[A]](END)((x,right)=>CHAIN(x,right))
+  }
+}
+

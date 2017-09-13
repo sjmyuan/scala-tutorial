@@ -1,6 +1,6 @@
 package com.scala.tutorial.custom
 
-import com.scala.tutorial.custom.category.data.{CHAIN, END}
+import com.scala.tutorial.custom.category.data.{CHAIN, END, MList}
 import org.scalatest.{FunSpec, Matchers}
 
 /**
@@ -16,14 +16,14 @@ class MListSpec extends FunSpec with Matchers {
         result should be(CHAIN(1,CHAIN(2,CHAIN(3,END))))
       }
 
-      it("can be used in match expression"){
-        val result = MList(1) match {
-          case MList(x) => x
-          case _ => 0
-        }
-
-        result should be(1)
-      }
+//      it("can be used in match expression"){
+//        val result = MList(1) match {
+//          case MList(x) => x
+//          case _ => 0
+//        }
+//
+//        result should be(1)
+//      }
     }
 
     describe("map"){
@@ -52,7 +52,7 @@ class MListSpec extends FunSpec with Matchers {
 
     describe("fold"){
       it("can collect element from left to right"){
-        MList("1","2","3").fold((sum,x)=>sum+x) should be("123")
+        MList("1","2","3").fold("")((sum,x)=>sum+x) should be("123")
       }
     }
 
