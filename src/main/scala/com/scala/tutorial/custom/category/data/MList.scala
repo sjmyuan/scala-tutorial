@@ -4,55 +4,55 @@ package com.scala.tutorial.custom.category.data
   * Created by jiaming.shang on 9/13/17.
   */
 
-sealed trait MList[+A]
-case object END extends MList[Nothing]
-case class CHAIN[+A](head:A,tail:MList[A]) extends MList[A]
-
-object MList{
-  def map[A,B](l:MList[A])(f:A=>B): MList[B] ={
-    l match {
+sealed trait MList[+A] {
+  def map[B](f: A => B): MList[B] = {
+    this match {
       case END => END
-      case CHAIN(head,tail) => CHAIN(f(head),map(tail)(f))
+      case CHAIN(head, tail) => CHAIN(f(head), tail.map(f))
     }
   }
 
-  def flatMap[A,B](l:MList[A])(f:A=>MList[B]):MList[B] ={
-    l match {
+  def flatMap[B](f: A => MList[B]): MList[B] = {
+    this match {
       case END => END
-      case CHAIN(head,tail) => join(f(head),flatMap(tail)(f))
+      case CHAIN(head, tail) => tail.fold(f(head))((sum, x) => sum.append(f(x)))
     }
   }
 
-  def join[A](l1:MList[A],l2:MList[A]):MList[A] ={
-    l1 match {
-      case END => l2
-      case CHAIN(head,tail) => CHAIN(head,join(tail,l2))
+  def append[B >: A](l: MList[B]): MList[B] = {
+    this match {
+      case END => l
+      case CHAIN(head, tail) => CHAIN(head, tail.append(l))
     }
   }
 
-  def foldLeft[A,B](v:B)(l:MList[A])(f:(B,A)=>B):B={
-    l match {
+  def foldLeft[B](v: B)(f: (B, A) => B): B = {
+    this match {
       case END => v
-      case CHAIN(head,tail) => foldLeft(f(v,head))(tail)(f)
+      case CHAIN(head, tail) => tail.foldLeft(f(v, head))(f)
     }
   }
 
-  def foldRight[A,B](v:B)(l:MList[A])(f:(A,B)=>B):B={
-    l match {
+  def foldRight[B](v: B)(f: (A, B) => B): B = {
+    this match {
       case END => v
-      case CHAIN(head,tail) => f(head,foldRight(v)(tail)(f))
+      case CHAIN(head, tail) => f(head, tail.foldRight(v)(f))
     }
   }
 
-  def fold[A,B](v:B)(l:MList[A])(f:(B,A)=>B):B={
-    foldLeft(v)(l)(f)
+  def fold[B](v: B)(f: (B, A) => B): B = {
+    foldLeft(v)(f)
   }
 
-  def reduce[A](l:MList[A])(f:(A,A)=>A):A={
-    l match {
-      case None => throw new Exception("Empty list can't reduce")
-      case CHAIN(head,tail) => foldLeft(head)(tail)(f)
+  def reduce[B >: A](f: (B, B) => B): B = {
+    this match {
+      case END => throw new Exception("Empty list can't reduce")
+      case CHAIN(head, tail) => tail.foldLeft(head)(f)
     }
   }
 }
+
+case object END extends MList[Nothing]
+
+case class CHAIN[+A](head: A, tail: MList[A]) extends MList[A]
 
