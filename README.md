@@ -1,4 +1,4 @@
-# scala-tutorial
+# scala-tutorial ![build](https://travis-ci.org/sjmyuan/scala-tutorial.svg)
 Learn scala by code
 
 ## Content
