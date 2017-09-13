@@ -47,7 +47,7 @@ sealed trait MList[+A] {
   def reduce[B >: A](f: (B, B) => B): B = {
     this match {
       case END => throw new Exception("Empty list can't reduce")
-      case CHAIN(head, tail) => tail.foldLeft(head)(f)
+      case CHAIN(head, tail) => tail.foldLeft[B](head)(f)
     }
   }
 }
