@@ -16,14 +16,14 @@ class MListSpec extends FunSpec with Matchers {
         result should be(CHAIN(1,CHAIN(2,CHAIN(3,END))))
       }
 
-//      it("can be used in match expression"){
-//        val result = MList(1) match {
-//          case MList(x) => x
-//          case _ => 0
-//        }
-//
-//        result should be(1)
-//      }
+      it("can be used in match expression"){
+        val result = MList(1) match {
+          case MList(x) => x
+          case _ => 0
+        }
+
+        result should be(1)
+      }
     }
 
     describe("map"){

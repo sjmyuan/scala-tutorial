@@ -60,5 +60,9 @@ object MList{
   def apply[A](values:A*): MList[A] ={
     values.foldRight[MList[A]](END)((x,right)=>CHAIN(x,right))
   }
+
+  def unapplySeq[A](l:MList[A]):Option[Seq[A]] ={
+    Some(l.foldLeft(Seq[A]())((sum,x)=>sum:+x))
+  }
 }
 
