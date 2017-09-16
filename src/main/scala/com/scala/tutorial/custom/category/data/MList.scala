@@ -50,6 +50,10 @@ sealed trait MList[+A] {
       case CHAIN(head, tail) => tail.foldLeft[B](head)(f)
     }
   }
+
+  def ::[B >: A](v:B):MList[B] ={
+    CHAIN(v,this)
+  }
 }
 
 case object END extends MList[Nothing]
@@ -63,6 +67,15 @@ object MList{
 
   def unapplySeq[A](l:MList[A]):Option[Seq[A]] ={
     Some(l.foldLeft(Seq[A]())((sum,x)=>sum:+x))
+  }
+}
+
+object :: {
+  def unapply[A](l:MList[A]):Option[(A,MList[A])] ={
+    l match {
+      case END => None
+      case CHAIN(head,tail) => Some((head,tail))
+    }
   }
 }
 
