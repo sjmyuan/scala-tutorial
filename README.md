@@ -29,13 +29,14 @@ Learn scala by code
 + Try
 + Semi-Group-TODO
 + Group-TODO
-+ Monoid-TODO
++ Monoid
 + Functor-TODO
 + Applicative-TODO
-+ Monad-TODO
++ Monad
   + ID-TODO
-  + Reader-TODO
-  + Writer-TODO
+  + Reader
+  + Writer
+  + State
   + Lens-TODO
   + Coproduct-TODO
   + Free Monad-TODO
