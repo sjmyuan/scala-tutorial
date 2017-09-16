@@ -17,3 +17,8 @@ case class Writer[A: Monoid, B](l: A, v: B) {
   }
 
 }
+
+object Writer{
+  def tell[A:Monoid](l:A)=Writer(l,Unit)
+  def value[A:Monoid,B](v:B)=Writer(implicitly[Monoid[A]].id,v)
+}
