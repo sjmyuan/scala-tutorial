@@ -1,6 +1,8 @@
 package com.scala.tutorial.custom
 
-import com.scala.tutorial.custom.category.monad.Free
+import com.scala.tutorial.custom.category.monad.{Free, FreeSimple}
+import com.scala.tutorial.custom.category.monad.Free.Id
+import com.scala.tutorial.custom.category.monad.~>
 import org.scalatest.{FunSpec, Matchers}
 
 /**
@@ -8,27 +10,32 @@ import org.scalatest.{FunSpec, Matchers}
   */
 class FreeSpec extends FunSpec with Matchers {
 
-  describe("Free"){
-    describe("run"){
-      it("should return the correct result"){
-         val f1:Any=>Free[String,Int] = (x:Any) => {
-           println(x)
-           Free.lift[String,Int](s"1${x}")
-         }
-         val f2:Any=>Free[String,Int] = (x:Any) => {
-           println(x)
-           Free.lift[String,Int](s"2${x}")
-         }
+  describe("Free") {
+    describe("run") {
+      it("should return the correct result") {
 
-         val interpreter: String=>Any = _.toInt
+        trait Request[A]
+        case class GetName() extends Request[String]
+        case class GetInfoByName(name:String) extends Request[String]
+        case class GetAddressByInfo(info:String) extends Request[String]
 
-         val expressions=for{
-           x1<-Free.lift[String,Int]("1")
-           x2<-f1(x1)
-           x3<-f2(x2)
-         } yield x3
+        class interpreter extends (Request ~> Id) {
+          override def apply[A](v: Request[A]): Id[A] = {
+            v match {
+              case GetName() => "test"
+              case GetInfoByName(name) => "Info"
+              case GetAddressByInfo(info) => "address"
+            }
+          }
+        }
 
-         expressions.run(interpreter) should be(211)
+        val expressions = for {
+          x1 <- Free.lift[Request,String](GetName())
+          x2 <- Free.lift[Request,String](GetInfoByName(x1))
+          x3 <- Free.lift[Request,String](GetAddressByInfo(x2))
+        } yield x3
+
+        expressions.run(new interpreter) should be("address")
       }
     }
   }

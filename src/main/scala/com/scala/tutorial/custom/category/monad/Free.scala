@@ -1,18 +1,20 @@
 package com.scala.tutorial.custom.category.monad
 
+import com.scala.tutorial.custom.category.monad.Free._
+
 /**
-  * Created by jiaming.shang on 9/18/17.
+  * Created by jiaming.shang on 9/19/17.
   */
-trait Free[S, +V] {
-  def flatMap[A](f: Any => Free[S, A]): Free[S, A] = {
-    FlatMap[S, A](f, this)
+sealed trait Free[F[_], +A] {
+  def flatMap[B](f: A => Free[F, B]): Free[F, B] = {
+    FlatMap[F, A,B](f, this)
   }
 
-  def map[A](f: Any => A): Free[S, A] = {
-    Map[S, A](f, this)
+  def map[B](f: A => B): Free[F, B] = {
+    Map[F, A,B](f, this)
   }
 
-  def run(f: S => Any): Any = {
+  def run(f: F~>Id): Id[A] = {
     this match {
       case Pure(v) => v
       case Map(f1, s) => f1(s.run(f))
@@ -22,15 +24,26 @@ trait Free[S, +V] {
   }
 }
 
-case class FlatMap[S, A](f: Any => Free[S, A], s: Free[S, Any]) extends Free[S, A]
 
-case class Map[S, A](f: Any => A, s: Free[S, Any]) extends Free[S, A]
-
-case class Pure[S, V](v: V) extends Free[S, V]
-case class Mock[S,V](s:S) extends Free[S,V]
+trait ~>[F[_],G[_]] {
+  def apply[A](v:F[A]):G[A]
+}
 
 
 object Free {
-  def pure[S, V](x: V): Free[S, V] = Pure[S, V](x)
-  def lift[S,V](s:S):Free[S,V]= Mock[S,V](s)
+
+  type Id[+A] = A
+
+  private case class FlatMap[F[_],A,B](f: A => Free[F, B], s: Free[F, A]) extends Free[F, B]
+
+  private case class Map[F[_], A, B](f: A => B, s: Free[F, A]) extends Free[F, B]
+
+  private case class Pure[F[_], A](v: A) extends Free[F, A]
+
+  private case class Mock[F[_], A](v: F[A]) extends Free[F, A]
+
+  def pure[F[_], A](x: A): Free[F, A] = Pure[F, A](x)
+
+  def lift[F[_], A](x: F[A]): Free[F, A] = Mock[F, A](x)
 }
+
