@@ -16,15 +16,13 @@ package com.scala.tutorial.custom.category.monad
 //
 //}
 
-case class Reader[A,B](f:A=>B){
+case class Reader[A,B](run:A=>B){
   def flatMap[C](g: (B) => Reader[A,C]): Reader[A,C] = {
-    Reader[A,C]((x:A) => g(f(x)).run(x))
+    Reader[A,C]((x:A) => g(run(x)).run(x))
   }
 
   def map[C](g: (B) => C): Reader[A,C] = {
-    Reader[A,C]((x:A)=>g(f(x)))
+    Reader[A,C]((x:A)=>g(run(x)))
   }
-
-  def run(v:A):B = f(v)
 }
 
