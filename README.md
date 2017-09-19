@@ -33,10 +33,10 @@ Learn scala by code
 + Functor-TODO
 + Applicative-TODO
 + Monad
-  + ID-TODO
+  + ID
   + Reader
   + Writer
   + State
   + Lens-TODO
   + Coproduct-TODO
-  + Free Monad-TODO
+  + Free Monad
