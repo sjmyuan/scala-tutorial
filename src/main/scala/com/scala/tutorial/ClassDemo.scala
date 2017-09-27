@@ -7,6 +7,8 @@ class ClassDemo {
 
   println("I'm in Class body")
 
+  lazy val age = "10"
+
   val name = "Demo"
 
   def func = {

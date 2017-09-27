@@ -40,3 +40,4 @@ Learn scala by code
   + Lens-TODO
   + Coproduct-TODO
   + Free Monad
+  + Stream
