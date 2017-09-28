@@ -11,6 +11,7 @@ import scala.util.{Failure, Success, Try}
   * Problem link: https://www.codechef.com/problems/MINIMAX
   */
 object MiniMax {
+
   def transposition(data: Vector[Vector[Int]]): Vector[Vector[Int]] = {
     val row = data.length
     if (row == 0)
@@ -24,16 +25,16 @@ object MiniMax {
   }
 
   def minimumChanges(data: Vector[Vector[Int]]): Try[Int] = {
-    Try({
+    Try {
       if (!isValidMatrix(data)) {
         throw new Exception("The matrix is invalid")
       }
+
       val rowData = data
       val colData = transposition(data)
-      val minRows = rowData.map(_.min)
-      val maxCols = colData.map(_.max)
-      val maxRow = minRows.max
-      val minCol = maxCols.min
+      val maxRow = rowData.map(_.min).max
+      val minCol = colData.map(_.max).min
+
       if (maxRow == minCol)
         0
       else {
@@ -41,11 +42,11 @@ object MiniMax {
         val minColChanges = colData.map(_.filter(_ > maxRow).length).min
         if (minRowChanges < minColChanges) minRowChanges else minColChanges
       }
-    })
+    }
   }
 
-  def getDataFromConsole():Try[Vector[Vector[Int]]]={
-    Try{
+  def getDataFromConsole(): Try[Vector[Vector[Int]]] = {
+    Try {
       println("Please type the matrix size:")
       val size = scala.io.StdIn.readLine().toInt
 
@@ -56,26 +57,22 @@ object MiniMax {
     }
   }
 
-  def getDataFromFile(file:String):Try[Vector[Vector[Int]]]={
-    Try{
+  def getDataFromFile(file: String): Try[Vector[Vector[Int]]] = {
+    Try {
       val lines = Source.fromFile(file).getLines()
       val size = lines.next().trim.toInt
-      lines.slice(1,size).map(_.split(" ").map(_.toInt).toVector).toVector
+      lines.slice(0, size).map(_.split(" ").map(_.toInt).toVector).toVector
     }
   }
 
   def main(args: Array[String]) = {
-    val data = if(args.length>0) getDataFromFile(args(0)) else getDataFromConsole()
+    val data = if (args.length > 0) getDataFromFile(args(0)) else getDataFromConsole()
 
-    data match {
-      case Success(matrix)=>
-        minimumChanges(matrix) match {
-          case Success(num) => {
-            println("The minimum changes is:")
-            println(num)
-          }
-          case Failure(e) => println(e)
-        }
+    data.flatMap(minimumChanges(_)) match {
+      case Success(num) => {
+        println("The minimum changes is:")
+        println(num)
+      }
       case Failure(e) => println(e)
     }
   }
