@@ -1,8 +1,9 @@
 package com.scala.tutorial.codechef
 
-import com.sun.net.httpserver.Authenticator.Success
+import com.sun.org.apache.bcel.internal.classfile.SourceFile
 
 import scala.collection.immutable.{Range, SortedSet}
+import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -22,7 +23,7 @@ object MiniMax {
     data.map(_.length).toSet.size == 1
   }
 
-  def minimumChanges(size: Int, data: Vector[Vector[Int]]): Try[Int] = {
+  def minimumChanges(data: Vector[Vector[Int]]): Try[Int] = {
     Try({
       if (!isValidMatrix(data)) {
         throw new Exception("The matrix is invalid")
@@ -43,18 +44,39 @@ object MiniMax {
     })
   }
 
-  def main(args: Array[String]) = {
-    println("Please type the matrix size:")
-    val size = scala.io.StdIn.readLine().toInt
-    println("Please type the matrix:")
-    val matrix = Range(0, size).map(x => {
-      scala.io.StdIn.readLine().split(" ").map(_.toInt).toVector
-    }).toVector
+  def getDataFromConsole():Try[Vector[Vector[Int]]]={
+    Try{
+      println("Please type the matrix size:")
+      val size = scala.io.StdIn.readLine().toInt
 
-    println("The minium changes:")
-    minimumChanges(size, matrix) match {
-      case scala.util.Success(num) => println(num)
-      case scala.util.Failure(e) => println(e)
+      println("Please type the matrix:")
+      Range(0, size).map(x => {
+        scala.io.StdIn.readLine().split(" ").map(_.toInt).toVector
+      }).toVector
+    }
+  }
+
+  def getDataFromFile(file:String):Try[Vector[Vector[Int]]]={
+    Try{
+      val lines = Source.fromFile(file).getLines()
+      val size = lines.next().trim.toInt
+      lines.slice(1,size).map(_.split(" ").map(_.toInt).toVector).toVector
+    }
+  }
+
+  def main(args: Array[String]) = {
+    val data = if(args.length>0) getDataFromFile(args(0)) else getDataFromConsole()
+
+    data match {
+      case Success(matrix)=>
+        minimumChanges(matrix) match {
+          case Success(num) => {
+            println("The minimum changes is:")
+            println(num)
+          }
+          case Failure(e) => println(e)
+        }
+      case Failure(e) => println(e)
     }
   }
 }
