@@ -1,7 +1,9 @@
 package com.scala.tutorial.codechef
 
-import scala.collection.immutable.SortedSet
-import scala.util.Try
+import com.sun.net.httpserver.Authenticator.Success
+
+import scala.collection.immutable.{Range, SortedSet}
+import scala.util.{Failure, Success, Try}
 
 /**
   * Created by jiaming.shang on 9/27/17.
@@ -39,5 +41,20 @@ object MiniMax {
         if (minRowChanges < minColChanges) minRowChanges else minColChanges
       }
     })
+  }
+
+  def main(args: Array[String]) = {
+    println("Please type the matrix size:")
+    val size = scala.io.StdIn.readLine().toInt
+    println("Please type the matrix:")
+    val matrix = Range(0, size).map(x => {
+      scala.io.StdIn.readLine().split(" ").map(_.toInt).toVector
+    }).toVector
+
+    println("The minium changes:")
+    minimumChanges(size, matrix) match {
+      case scala.util.Success(num) => println(num)
+      case scala.util.Failure(e) => println(e)
+    }
   }
 }
