@@ -9,19 +9,17 @@ import scala.util.Try
 object LittleChefandSums {
   def miniIndex(data: Vector[Int]): Int = {
     val allSum = data.sum
-    Range(2, data.length + 1).foldLeft((data(0), allSum, data(0) + allSum, 1))(
-      (sum, x) => {
-        val (leftSum, rightSum, currSum, currIndex) = sum
-        val newLeftSum = leftSum + data(x - 1)
-        val newRightSum = rightSum - data(x - 2)
-        val newAllSum = newLeftSum + newRightSum
+    Range(2, data.length + 1).foldLeft((data(0) + allSum, 1, data(0) + allSum))(
+      (acc, x) => {
+        val (minSum, minIndex, currSum) = acc
+        val newSum = currSum + data(x - 1) - data(x - 2)
 
-        if (newAllSum < currSum)
-          (newLeftSum, newRightSum, newAllSum, x)
+        if (newSum < minSum)
+          (newSum, x, newSum)
         else
-          (newLeftSum, newRightSum, currSum, currIndex)
+          (minSum, minIndex, newSum)
       }
-    )._4
+    )._2
   }
 
   def getDataFromConsole(): List[Vector[Int]] = {
@@ -30,11 +28,13 @@ object LittleChefandSums {
     var data = List[Vector[Int]]()
 
     Range(0, size).foreach(x => {
-      scala.io.StdIn.readLine().toInt
-      data = scala.io.StdIn.readLine().split(" ").map(_.toInt).toVector :: data
+      val size = scala.io.StdIn.readLine().toInt
+      val caseData = scala.io.StdIn.readLine().split(" ").map(_.toInt).toVector
+      assert(size == caseData.length)
+      data = data ::: List(caseData)
     })
 
-    data.reverse
+    data
   }
 
   def main(args: Array[String]) = {
