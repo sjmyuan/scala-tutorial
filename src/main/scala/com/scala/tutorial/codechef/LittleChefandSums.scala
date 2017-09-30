@@ -7,7 +7,7 @@ import scala.util.Try
   * Problem links: https://www.codechef.com/problems/CHEFSUM
   */
 object LittleChefandSums {
-  def miniIndex(data: Vector[Int]): Int = {
+  def miniIndex(data: Vector[Long]): Int = {
     val allSum = data.sum
     Range(2, data.length + 1).foldLeft((data(0) + allSum, 1, data(0) + allSum))(
       (acc, x) => {
@@ -22,14 +22,14 @@ object LittleChefandSums {
     )._2
   }
 
-  def getDataFromConsole(): List[Vector[Int]] = {
+  def getDataFromConsole(): List[Vector[Long]] = {
     val size = scala.io.StdIn.readLine().toInt
 
-    var data = List[Vector[Int]]()
+    var data = List[Vector[Long]]()
 
     Range(0, size).foreach(x => {
       val size = scala.io.StdIn.readLine().toInt
-      val caseData = scala.io.StdIn.readLine().split(" ").map(_.toInt).toVector
+      val caseData = scala.io.StdIn.readLine().split(" ").map(_.toLong).toVector
       assert(size == caseData.length)
       data = data ::: List(caseData)
     })
