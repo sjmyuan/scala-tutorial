@@ -25,12 +25,13 @@ sealed trait Free[F[_], +A] {
 }
 
 
-trait ~>[F[_],G[_]] {
-  def apply[A](v:F[A]):G[A]
-}
 
 
 object Free {
+
+  trait ~>[F[_],G[_]] {
+    def apply[A](v:F[A]):G[A]
+  }
 
   type Id[+A] = A
 
