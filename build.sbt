@@ -11,7 +11,8 @@ libraryDependencies ++= Seq(
   "org.tpolecat" %% "doobie-core-cats" % doobieVersion,
   "org.tpolecat" %% "doobie-postgres-cats" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest-cats" % doobieVersion,
-  "org.typelevel" %% "cats-effect" % "0.3"
+  "org.typelevel" %% "cats-effect" % "0.3",
+  "org.typelevel" %% "cats-core" % "0.9.0"
 )
 initialCommands in console := "import doobie.imports._"
 
