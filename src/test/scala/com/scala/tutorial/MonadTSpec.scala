@@ -14,15 +14,21 @@ class MonadTSpec extends FunSpec with Matchers{
 
   describe("MonadTransformer"){
     it("should transform one monad to another"){
-      type AppStack = ReaderT[Option,String,Int]
+      type WriterOption[A]=WriterT[Option,String,A]
+      type AppStack[A] = ReaderT[WriterOption,String,A]
 
-      def parseInt(s:String):Option[Int] ={
-        Try{s.toInt}.toOption
+      def parseInt(s:String):WriterOption[Int] ={
+        for{
+          v<-WriterT.valueT[Option,String,Int](Try{s.toInt}.toOption)
+          _<-WriterT.tell[Option,String](s"the value is ${v}")
+        } yield v
       }
 
-      val parseReader:AppStack=ReaderT(parseInt)
 
-      parseReader.run("2.s") should be(None)
+
+      val parseReader:AppStack[Int]=ReaderT[WriterOption,String,Int](parseInt)
+
+      parseReader.run("2").run should be(Some(("the value is 2",2)) )
     }
   }
 
