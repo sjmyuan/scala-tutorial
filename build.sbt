@@ -14,6 +14,9 @@ libraryDependencies ++= Seq(
   "org.typelevel" %% "cats-effect" % "0.3",
   "org.typelevel" %% "cats-core" % "0.9.0"
 )
+
+addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.4")
+
 initialCommands in console := "import doobie.imports._"
 
 libraryDependencies += "com.lihaoyi" % "ammonite" % "1.0.2" % "test" cross CrossVersion.full
