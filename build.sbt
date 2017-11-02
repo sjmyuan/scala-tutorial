@@ -12,7 +12,12 @@ libraryDependencies ++= Seq(
   "org.tpolecat" %% "doobie-postgres-cats" % doobieVersion,
   "org.tpolecat" %% "doobie-scalatest-cats" % doobieVersion,
   "org.typelevel" %% "cats-effect" % "0.3",
-  "org.typelevel" %% "cats-core" % "0.9.0"
+  "org.typelevel" %% "cats-core" % "0.9.0",
+  "org.typelevel" %% "cats" % "0.9.0",
+  "org.atnos" %% "eff" % "4.6.1",
+  "org.atnos" %% "eff-monix" % "4.6.1",
+  "io.monix" %% "monix" % "2.3.0",
+  "io.monix" %% "monix-cats" % "2.3.0"
 )
 
 addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.4")
