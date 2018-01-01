@@ -11,7 +11,7 @@ import fs2.interop.cats._
 class DoobieSpec extends FunSpec with Matchers {
 
   describe("doobie") {
-    it("can connect to postgresql") {
+    ignore("can connect to postgresql") {
       val xa = DriverManagerTransactor[IOLite](
         "org.postgresql.Driver", "jdbc:postgresql://localhost/postgres", "postgres", "test"
       )

@@ -32,4 +32,7 @@ sourceGenerators in Test += Def.task {
   Seq(file)
 }.taskValue
 
-scalacOptions ++= Seq("-language:implicitConversions")
+scalacOptions ++= Seq(
+  "-language:implicitConversions",
+  "-Ypartial-unification"
+)
