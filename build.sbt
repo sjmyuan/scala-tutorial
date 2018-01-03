@@ -17,8 +17,11 @@ libraryDependencies ++= Seq(
   "org.atnos" %% "eff" % "4.6.1",
   "org.atnos" %% "eff-monix" % "4.6.1",
   "io.monix" %% "monix" % "2.3.0",
-  "io.monix" %% "monix-cats" % "2.3.0"
+  "io.monix" %% "monix-cats" % "2.3.0",
+  "com.lihaoyi" %% "utest" % "0.6.0" % "test"
 )
+
+testFrameworks += new TestFramework("utest.runner.Framework")
 
 addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.4")
 
