@@ -18,6 +18,7 @@ libraryDependencies ++= Seq(
   "org.atnos" %% "eff-monix" % "4.6.1",
   "io.monix" %% "monix" % "2.3.0",
   "io.monix" %% "monix-cats" % "2.3.0",
+  "io.circe" %% "circe-parser" % "0.8.0",
   "com.lihaoyi" %% "utest" % "0.6.0" % "test"
 )
 
