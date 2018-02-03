@@ -19,7 +19,9 @@ libraryDependencies ++= Seq(
   "io.monix" %% "monix" % "2.3.0",
   "io.monix" %% "monix-cats" % "2.3.0",
   "io.circe" %% "circe-parser" % "0.8.0",
-  "com.lihaoyi" %% "utest" % "0.6.0" % "test"
+  "com.lihaoyi" %% "utest" % "0.6.0" % "test",
+  "co.fs2" %% "fs2-core" % "0.9.7",
+  "co.fs2" %% "fs2-io" % "0.9.7"
 )
 
 testFrameworks += new TestFramework("utest.runner.Framework")
