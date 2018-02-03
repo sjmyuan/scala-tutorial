@@ -28,12 +28,36 @@ class ParallelSpec extends FunSpec with Matchers {
         concurrent.join(3)(stream).runLog.unsafeRun()
       }
 
-      it("task should can be run in parallel"){
+      it("task.parallelTraverse should can be run in parallel"){
         Task.parallelTraverse(Range(1,100))(x=> Task {
           println(s"${System.currentTimeMillis()}: ${Thread.currentThread.getName}")
           Thread.sleep(1000)
           Random.nextInt()
         }).unsafeRun()
+      }
+
+      it("task.traverse should can be run in seralization"){
+        Task.traverse(Range(1,10))(x=> Task {
+          println(s"${System.currentTimeMillis()}: ${Thread.currentThread.getName}")
+          Thread.sleep(1000)
+          Random.nextInt()
+        }).unsafeRun()
+      }
+
+      it("Task() should use the thread pool"){
+        Task {
+          println(s"${System.currentTimeMillis()}: ${Thread.currentThread.getName}")
+          Thread.sleep(1000)
+          Random.nextInt()
+        }.unsafeRun()
+      }
+
+      it("Task.delay should use the main thread"){
+        Task.delay {
+          println(s"${System.currentTimeMillis()}: ${Thread.currentThread.getName}")
+          Thread.sleep(1000)
+          Random.nextInt()
+        }.unsafeRun()
       }
     }
   }
