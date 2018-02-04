@@ -57,6 +57,29 @@ class ParallelSpec extends FunSpec with Matchers {
           Job()
         }.unsafeRun()
       }
+
+      it("Stream.emit will return job one by one") {
+        val collect = Stream.emits(Range(1, 10)).map(x => Stream.eval(Task {
+          Job()
+        }))
+        val result = concurrent.join(3)(collect).take(4).runLog.unsafeRun()
+        println(result)
+      }
+
+      it("join will fail if there is one stream fail") {
+        val collect = Stream.emits(List(
+          Stream.eval(Task {
+            Job()
+          }),
+          Stream.eval(Task[Int] {
+            assert(1 != 1)
+            Job()
+          })
+        )
+        )
+        val result = concurrent.join(3)(collect).runLog.attempt.unsafeRun()
+        println(result)
+      }
     }
   }
 }
