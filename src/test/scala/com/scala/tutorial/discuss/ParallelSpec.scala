@@ -80,6 +80,13 @@ class ParallelSpec extends FunSpec with Matchers {
         val result = concurrent.join(3)(collect).runLog.attempt.unsafeRun()
         println(result)
       }
+
+      it("Task.parallelTravers won't block when the inner Task is async"){
+
+        val seeds = Range(1,30)
+
+        Task.parallelTraverse(seeds)(x=>Task{Job()})(Strategy.fromFixedDaemonPool(1)).unsafeRun()
+      }
     }
   }
 }
