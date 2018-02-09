@@ -35,15 +35,21 @@ class ParallelSpec extends FunSpec with Matchers {
       }
 
       it("task.parallelTraverse should can be run in parallel") {
-        Task.parallelTraverse(Range(1, 100))(x => Task {
-          Job()
+        Task.parallelTraverse(Range(1, 100))(x => {
+          println(s"task ${x}")
+          Task {
+            Job()
+          }
         }).unsafeRun()
       }
 
       it("task.traverse should can be run in seralization") {
-        Task.traverse(Range(1, 10))(x => Task {
-          Job()
-        }).unsafeRun()
+         Task.traverse(Range(1, 10))(x => {
+           println(s"task ${x}")
+           Task {
+             Job()
+           }
+         }).unsafeRun()
       }
 
       it("Task() should use the thread pool") {
@@ -64,6 +70,13 @@ class ParallelSpec extends FunSpec with Matchers {
         }))
         val result = concurrent.join(3)(collect).take(4).runLog.unsafeRun()
         println(result)
+      }
+
+      it("Task.flatMap will return to current thread"){
+        Task(Job()).flatMap(x=>Task.delay({
+          println("haha")
+          Job()
+        })).unsafeRun()
       }
 
       it("join will fail if there is one stream fail") {
