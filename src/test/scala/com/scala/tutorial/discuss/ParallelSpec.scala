@@ -12,8 +12,8 @@ class ParallelSpec extends FunSpec with Matchers {
     describe("0.9.7") {
       implicit val strategy = Strategy.fromFixedDaemonPool(10, "test-pool")
 
-      def Job(): Int = {
-        println(s"${System.currentTimeMillis()}: ${Thread.currentThread.getName}")
+      def Job(name:String = "default"): Int = {
+        println(s"${name} ${System.currentTimeMillis()}: ${Thread.currentThread.getName}")
         Thread.sleep(1000)
         Random.nextInt()
       }
@@ -50,6 +50,29 @@ class ParallelSpec extends FunSpec with Matchers {
              Job()
            }
          }).unsafeRun()
+      }
+
+      it("task.parallelTraverse flatMap can be run all in parallel") {
+        val task1 = Task.parallelTraverse(Range(1, 50))(x => {
+          println(s"task ${x}")
+          Task {
+            Job("job1")
+          }
+        })
+
+        val task2 = Task.parallelTraverse(Range(1, 50))(x => {
+          println(s"task ${x}")
+          Task {
+            Job("job2")
+          }
+        })
+
+        val total = for{
+          v1 <- task1
+          v2 <- task2
+        } yield v1 ++ v2
+
+        total.unsafeRun()
       }
 
       it("Task() should use the thread pool") {
