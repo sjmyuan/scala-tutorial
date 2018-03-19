@@ -70,5 +70,15 @@ class EitherEffectSpec extends FunSpec with Matchers {
         runMyEffect(program.runReader(2)).catchLeft[String](e => Eff.pure[Fx.fx1[Either[String, ?]], Int](1)).runEither.run should be(Right(1))
       }
     }
+    describe("runEither") {
+      it("should return the Either type when there is no either effect in program") {
+        type Stack = Fx.fx2[Reader[Int, ?], Either[String, ?]]
+        val program: Eff[Stack, Int] = for {
+          number <- ask[Stack, Int]
+        } yield number
+
+        program.runReader(2).runEither.run should be(Right(2))
+      }
+    }
   }
 }
