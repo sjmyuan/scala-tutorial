@@ -89,6 +89,29 @@ class EitherEffectSpec extends FunSpec with Matchers {
 
         program.runReader(0).runEither.run should be(Right("ok"))
       }
+
+      it("should not change the return type") {
+        sealed trait MyEffect[A]
+        case class LogValue(v: Int) extends MyEffect[Unit]
+        type HasMyEffect[R] = MemberIn[MyEffect, R]
+
+        def runMyEffect[R, A, U: Member.Aux[MyEffect, R, ?] ](eff: Eff[R, A]): Eff[U, A] = Interpret.translate[R, U, MyEffect, A](eff)(
+          new Translate[MyEffect, U] {
+            override def apply[X](kv: MyEffect[X]): Eff[U, X] = {
+              kv match {
+                case LogValue(v) => Eff.pure(())
+              }
+            }
+          })
+
+        type Stack = Fx.fx2[Reader[Int, ?], MyEffect]
+        val program: Eff[Stack, Int] = for {
+          number <- ask[Stack, Int]
+          _ <- Eff.send[MyEffect, Stack, Unit](LogValue(number))
+        } yield number
+
+        runMyEffect(program.runReader(2)).run should be(2)
+      }
     }
   }
 }
