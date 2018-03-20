@@ -79,6 +79,16 @@ class EitherEffectSpec extends FunSpec with Matchers {
 
         program.runReader(2).runEither.run should be(Right(2))
       }
+
+      it("should return the last data type of effect") {
+        type Stack = Fx.fx2[Reader[Int, ?], Either[String, ?]]
+        val program: Eff[Stack, String] = for {
+          number <- ask[Stack, Int]
+          result <- fromEither[Stack, String, String](Either.cond((number === 0), "ok", "less than zero"))
+        } yield result
+
+        program.runReader(0).runEither.run should be(Right("ok"))
+      }
     }
   }
 }
