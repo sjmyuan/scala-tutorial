@@ -1,4 +1,4 @@
-package com.scala.tutorial.cats.effect
+package com.scala.tutorial.mycats.effect
 
 import cats.effect.IO
 import org.scalatest.{FunSpec, Matchers}
