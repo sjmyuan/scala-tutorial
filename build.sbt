@@ -21,7 +21,8 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-parser" % "0.8.0",
   "com.lihaoyi" %% "utest" % "0.6.0" % "test",
   "co.fs2" %% "fs2-core" % "0.9.7",
-  "co.fs2" %% "fs2-io" % "0.9.7"
+  "co.fs2" %% "fs2-io" % "0.9.7",
+  "com.github.pureconfig" %% "pureconfig" % "0.9.1"
 )
 
 testFrameworks += new TestFramework("utest.runner.Framework")

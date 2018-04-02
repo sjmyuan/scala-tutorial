@@ -12,7 +12,7 @@ class ParallelSpec extends FunSpec with Matchers {
     describe("0.9.7") {
       implicit val strategy = Strategy.fromFixedDaemonPool(10, "test-pool")
 
-      def Job(name:String = "default"): Int = {
+      def Job(name: String = "default"): Int = {
         println(s"${name} ${System.currentTimeMillis()}: ${Thread.currentThread.getName}")
         Thread.sleep(1000)
         Random.nextInt()
@@ -44,12 +44,12 @@ class ParallelSpec extends FunSpec with Matchers {
       }
 
       it("task.traverse should can be run in seralization") {
-         Task.traverse(Range(1, 10))(x => {
-           println(s"task ${x}")
-           Task {
-             Job()
-           }
-         }).unsafeRun()
+        Task.traverse(Range(1, 10))(x => {
+          println(s"task ${x}")
+          Task {
+            Job()
+          }
+        }).unsafeRun()
       }
 
       it("task.parallelTraverse flatMap can be run all in parallel") {
@@ -67,7 +67,7 @@ class ParallelSpec extends FunSpec with Matchers {
           }
         })
 
-        val total = for{
+        val total = for {
           v1 <- task1
           v2 <- task2
         } yield v1 ++ v2
@@ -95,8 +95,8 @@ class ParallelSpec extends FunSpec with Matchers {
         println(result)
       }
 
-      it("Task.flatMap will return to current thread"){
-        Task(Job()).flatMap(x=>Task.delay({
+      it("Task.flatMap will return to current thread") {
+        Task(Job()).flatMap(x => Task.delay({
           println("haha")
           Job()
         })).unsafeRun()
@@ -117,18 +117,33 @@ class ParallelSpec extends FunSpec with Matchers {
         println(result)
       }
 
-      it("Task.parallelTravers won't block when the inner Task is async"){
+      it("Task.parallelTravers won't block when the inner Task is async") {
 
-        val seeds = Range(1,30)
+        val seeds = Range(1, 30)
 
-        Task.parallelTraverse(seeds)(x=>Task{Job()})(Strategy.fromFixedDaemonPool(1)).unsafeRun()
+        Task.parallelTraverse(seeds)(x => Task {
+          Job()
+        })(Strategy.fromFixedDaemonPool(1)).unsafeRun()
       }
 
-      it("Task.parallelTravers will block when the inner Task is not async"){
+      it("Task.parallelTravers will block when the inner Task is not async") {
 
-        val seeds = Range(1,30)
+        val seeds = Range(1, 30)
 
-        Task.parallelTraverse(seeds)(x=>Task.delay(Job()))(Strategy.fromFixedDaemonPool(1)).unsafeRun()
+        Task.parallelTraverse(seeds)(x => Task.delay(Job()))(Strategy.fromFixedDaemonPool(1)).unsafeRun()
+      }
+
+      it("Stream.unfold should run after run") {
+        val list = Stream.unfold(0)(x => {
+          if (x > 5) None
+          else Some(x -> (x + 1))
+        })
+
+        list.forall(x => {
+          println(x)
+          true
+        }).run
+
       }
     }
   }
