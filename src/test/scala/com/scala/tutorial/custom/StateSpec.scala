@@ -38,6 +38,35 @@ class StateSpec extends FunSpec with Matchers {
         State.pure[List[Int], Int](2).run(List(1, 2, 3)) should be((List(1, 2, 3), 2))
       }
     }
+
+    describe("Demos") {
+      it("list can act as a stack") {
+
+        type Stack = List[Int]
+
+        def pop: State[Stack, Int] = for {
+          a <- State.gets[Stack, Int]({ case head :: tail => head })
+          _ <- State.modify[Stack]({ case head :: tail => tail })
+        } yield a
+
+        def push(v: Int): State[Stack, Unit] = State.modify[Stack](s => v :: s)
+
+        def tos: State[Stack, Int] = State.gets({ case head :: tail => head })
+
+        val result = for {
+          _ <- push(10)
+          _ <- push(20)
+          _ <- push(40)
+          a <- pop
+          b <- pop
+          _ <- push(a + b)
+          v <- tos
+        } yield v
+
+        result.run(List()) shouldBe ((List(60, 10), 60))
+
+      }
+    }
   }
 
 }
