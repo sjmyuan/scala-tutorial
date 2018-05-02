@@ -6,36 +6,36 @@ import org.scalatest.{FunSpec, Matchers}
 /**
   * Created by jiaming.shang on 9/16/17.
   */
-class StateSpec extends FunSpec with Matchers{
+class StateSpec extends FunSpec with Matchers {
 
-  describe("State"){
-    describe("get"){
-      it("should return the State(s=>(s,s))"){
-        State.get[Int](1) should be((1,1))
+  describe("State") {
+    describe("get") {
+      it("should return the State(s=>(s,s))") {
+        State.get[Int].run(1) should be((1, 1))
       }
     }
 
-    describe("gets"){
-      it("should return the State(s=>(s,f(s)))"){
-        State.gets[Int,Int](x=>x+1)(1) should be((1,2))
+    describe("gets") {
+      it("should return the State(s=>(s,f(s)))") {
+        State.gets[Int, Int](x => x + 1).run(1) should be((1, 2))
       }
     }
 
-    describe("put"){
-      it("should return the State(s=>(s,_))"){
-        State.put[Int](1)(2) should be((1,Unit))
+    describe("put") {
+      it("should return the State(s=>(s,_))") {
+        State.put[Int](1).run(2) should be((1, ()))
       }
     }
 
-    describe("state"){
-      it("should return the State(s=>(_,v))"){
-        State.state(1)(3) should be((3,1))
+    describe("modify") {
+      it("should return the State(s=>(f(s),_))") {
+        State.modify[List[Int]](x => x.tail).run(List(1, 2, 3)) should be((List(2, 3), ()))
       }
     }
 
-    describe("modify"){
-      it("should return the State(s=>(f(s),_))"){
-        State.modify[Int](x=>x+1)(1) should be((2,Unit))
+    describe("pure") {
+      it("should return the State(s=>(s,a))") {
+        State.pure[List[Int], Int](2).run(List(1, 2, 3)) should be((List(1, 2, 3), 2))
       }
     }
   }
