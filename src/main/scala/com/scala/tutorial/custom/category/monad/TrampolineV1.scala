@@ -1,5 +1,7 @@
 package com.scala.tutorial.custom.category.monad
 
+import com.scala.tutorial.custom.category.monad.TrampolineV1.{Done, More}
+
 trait TrampolineV1[A] {
   final def runT: A = {
     this match {
@@ -9,9 +11,13 @@ trait TrampolineV1[A] {
   }
 }
 
-case class Done[A](v: A) extends TrampolineV1[A]
+object TrampolineV1 {
 
-case class More[A](f: () => TrampolineV1[A]) extends TrampolineV1[A]
+  case class Done[A](v: A) extends TrampolineV1[A]
+
+  case class More[A](f: () => TrampolineV1[A]) extends TrampolineV1[A]
+
+}
 
 
 case class StateV1[S, A](run: S => TrampolineV1[(S, A)]) {

@@ -1,6 +1,7 @@
 package com.scala.tutorial.custom
 
-import com.scala.tutorial.custom.category.monad.{Done, More, StateV1, TrampolineV1}
+import com.scala.tutorial.custom.category.monad.TrampolineV1.{Done, More}
+import com.scala.tutorial.custom.category.monad.{StateV1, TrampolineV1}
 import org.scalatest.{FunSpec, Matchers}
 
 class TrampolineV1Spec extends FunSpec with Matchers {
