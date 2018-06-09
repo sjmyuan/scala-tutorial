@@ -68,15 +68,28 @@ class StateSpec extends FunSpec with Matchers {
       }
 
       it("too many action will throw exception") {
-//        Range(0, 1000000)
-//          .foldLeft[State[Int, List[(Int, Int)]]](State.pure[Int, List[(Int, Int)]](List()))(
-//          (acc, ele) =>
-//            for {
-//              kv <- acc
-//              index <- State.get
-//              _ <- State.put(index + 1)
-//            } yield (index, ele) :: kv
-//        ).run(0)._2.reverse
+                Range(0, 100)
+                  .foldLeft[State[Int, List[(Int, Int)]]](State.pure[Int, List[(Int, Int)]](List()))(
+                  (acc, ele) =>
+                    for {
+                      kv <- acc
+                      index <- State.get
+                      _ <- State.put(index + 1)
+                    } yield (index, ele) :: kv
+                ).run(0)._2.reverse
+
+        //        val data = Range(0, 1000000).toVector
+        //        var initialState = State.pure[Int, List[(Int, Int)]](List())
+        //        var i = 0
+        //        data.foreach { ele =>
+        //          initialState = for {
+        //            kv <- initialState
+        //            index <- State.get
+        //            _ <- State.put(index + 1)
+        //          } yield (index, ele) :: kv
+        //        }
+        //
+        //        initialState.run(0)._2
       }
     }
   }

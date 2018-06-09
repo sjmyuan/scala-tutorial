@@ -19,6 +19,17 @@ case class State[S, A](run: S => (S, A)) {
     })
   }
 
+  // run1 f1 => run2
+  // run2 f2 => run3
+  // run3 f3 => run4
+
+  def flatFunction(run: S => (S, A), f: A => (S => (S, A))): S => (S, A) = {
+    s => {
+      val (old) = run(s)
+      f(old._2)(old._1)
+    }
+  }
+
   def evalState(s: S): A = run(s)._2
 
   def execState(s: S): S = run(s)._1
