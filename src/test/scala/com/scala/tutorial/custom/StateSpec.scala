@@ -66,26 +66,17 @@ class StateSpec extends FunSpec with Matchers {
         result.run(List()) shouldBe ((List(60, 10), 60))
 
       }
+
       it("too many action will throw exception") {
-        type Stack = List[Int]
-
-        var result = State.get[Stack]
-        var i = 0
-
-        while (i < 100000) {
-          result = result.flatMap(s => {
-            val t = State.pure[Stack, Stack](i :: s)
-            val n = 1
-            t
-          })
-          //          result = for {
-          //            s <- result
-          //            _ <- State.modify[Stack](_ => 1 :: s)
-          //            a <- State.pure[Stack, Stack](2 :: s)
-          //            b = a
-          //          } yield a
-          i += 1
-        }
+//        Range(0, 1000000)
+//          .foldLeft[State[Int, List[(Int, Int)]]](State.pure[Int, List[(Int, Int)]](List()))(
+//          (acc, ele) =>
+//            for {
+//              kv <- acc
+//              index <- State.get
+//              _ <- State.put(index + 1)
+//            } yield (index, ele) :: kv
+//        ).run(0)._2.reverse
       }
     }
   }
