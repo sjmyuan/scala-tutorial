@@ -3,18 +3,6 @@ package com.scala.tutorial.custom.category.monad
 import com.scala.tutorial.custom.category.monad.TrampolineV3.{Done, FlatMap, More}
 
 trait TrampolineV3[A] {
-  //  final def runT: A = {
-  //    this match {
-  //      case Done(v) => v
-  //      case More(f) => f().runT
-  //      case FlatMap(a, f) => a match {
-  //        case Done(v) => f(v).runT
-  //        case More(f1) => FlatMap(f1(), f).runT
-  //        case FlatMap(a1, f1) => FlatMap(FlatMap(Done(a1.runT), f1), f).runT
-  //      }
-  //    }
-  //  }
-
   final def runT: A = {
     this match {
       case Done(v) => v
@@ -22,10 +10,22 @@ trait TrampolineV3[A] {
       case FlatMap(a, f) => a match {
         case Done(v) => f(v).runT
         case More(f1) => FlatMap(f1(), f).runT
-        case FlatMap(a1, f1) => FlatMap(a1, (x: Any) => FlatMap(f1(x), f)).runT
+        case FlatMap(a1, f1) => FlatMap(FlatMap(Done(a1.runT), f1), f).runT
       }
     }
   }
+
+  //  final def runT: A = {
+  //    this match {
+  //      case Done(v) => v
+  //      case More(f) => f().runT
+  //      case FlatMap(a, f) => a match {
+  //        case Done(v) => f(v).runT
+  //        case More(f1) => FlatMap(f1(), f).runT
+  //        case FlatMap(a1, f1) => FlatMap(a1, (x: Any) => FlatMap(f1(x), f)).runT
+  //      }
+  //    }
+  //  }
 }
 
 object TrampolineV3 {
@@ -43,10 +43,12 @@ case class StateV3[S, A](run: S => TrampolineV3[(S, A)]) {
 
   def map[B](f: A => B): StateV3[S, B] = {
     StateV3[S, B](s => FlatMap[(S, A), (S, B)](run(s), { case (s1, a) => Done((s1, f(a))) }))
+    //    StateV3[S, B](s => More(() => FlatMap[(S, A), (S, B)](run(s), { case (s1, a) => Done((s1, f(a))) })))
   }
 
   def flatMap[B](f: A => StateV3[S, B]): StateV3[S, B] = {
     StateV3[S, B](s => FlatMap[(S, A), (S, B)](run(s), { case (s1, a) => f(a).run(s1) })
+      //    StateV3[S, B](s => More(() => FlatMap[(S, A), (S, B)](run(s), { case (s1, a) => More(() => f(a).run(s1)) }))
     )
   }
 
