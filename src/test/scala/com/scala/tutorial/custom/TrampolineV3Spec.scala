@@ -5,9 +5,9 @@ import org.scalatest.{FunSpec, Matchers}
 
 class TrampolineV3Spec extends FunSpec with Matchers {
 
-  describe("TrampolineV1") {
+  describe("TrampolineV3") {
     it("should still throw stack overflow for StateV3") {
-      Range(0, 100)
+      Range(0, 1)
         .foldLeft[StateV3[Int, List[(Int, Int)]]](StateV3.pure[Int, List[(Int, Int)]](List()))(
         (acc, ele) =>
           for {
