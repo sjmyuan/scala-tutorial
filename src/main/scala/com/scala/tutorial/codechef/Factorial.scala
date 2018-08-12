@@ -21,11 +21,8 @@ object Factorial {
     var acc: Long = 0
     var stack: Long = 5
     while (stack <= n) {
-      var index: Long = 1
-      while (index * stack <= n) {
-        acc = acc + 1
-        index = index + 1
-      }
+      val total: Long = n / stack
+      acc += total
       stack = stack * 5
     }
     return acc
@@ -33,9 +30,9 @@ object Factorial {
 
   def main(args: Array[String]) = {
     val input = getDataFromConsole()
-    val start = System.currentTimeMillis()
+    //    val start = System.currentTimeMillis()
     input.map(factorialZerors).foreach(println(_))
-    val end = System.currentTimeMillis()
-    println(s"Time: ${end-start}")
+    //    val end = System.currentTimeMillis()
+    //    println(s"Time: ${end-start}")
   }
 }
