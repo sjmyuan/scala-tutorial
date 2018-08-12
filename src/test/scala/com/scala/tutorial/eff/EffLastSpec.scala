@@ -14,10 +14,12 @@ class EffLastSpec extends FunSpec {
     it("should run at the last of eff") {
       type Stack = Fx.fx2[Reader[Int, ?], IO]
       val program: Eff[Stack, Unit] = for {
-        _ <- IOEffect.ioDelay[Stack,Unit](println("start............"))
+        _ <- Eff.pure[Stack,String]("a").addLast(IOEffect.ioDelay[Stack,Unit](println("start............")))
         number <- ask[Stack, Int].addLast(IOEffect.fromIO(IO(println("begin get number"))))
-        result <- IOEffect.ioDelay[Stack, Unit](println(s"get number ${number}"))
-          .addLast(IOEffect.ioDelay[Stack,Unit](println("end get number")))
+        result <- Eff.pure[Stack,String]("b").addLast({
+            println("ooooooo")
+            IOEffect.ioDelay[Stack,Unit](println("end get number"))
+          })
         _ <- ask[Stack, Int]
       } yield result
 
