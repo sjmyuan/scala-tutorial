@@ -43,5 +43,6 @@ sourceGenerators in Test += Def.task {
 
 scalacOptions ++= Seq(
   "-language:implicitConversions",
+  "-language:experimental.macros",
   "-Ypartial-unification"
 )
